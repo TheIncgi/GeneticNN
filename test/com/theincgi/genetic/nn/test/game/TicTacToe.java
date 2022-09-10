@@ -25,9 +25,11 @@ public class TicTacToe {
 	private float[] scores = new float[2];
 	Player turn;
 	Player winner = null;
+
+	private int failures = 0;
 	
 	public TicTacToe(Random random) {
-		 turn = RandomUtils.pickRandom(random, Player.values());
+		 turn = RandomUtils.pickRandomOfVarargs(random, Player.values());
 	}
 	
 	public boolean containsMark( int x, int y ) {
@@ -38,19 +40,23 @@ public class TicTacToe {
 	public boolean doTurn( int x, int y ) {
 		if( !hasEmpty() )
 			return false;
-		if( hasWinner() )
+		if( isGameDone() )
 			return false;
 		if( turn == null )
 			return false;
+		if( failures == 2 )
+			return false; //game is dead
 		
 		if( containsMark(x, y)  ) {
 			scores[turn.ordinal()] -= 100;
+			failures ++;
+			turn = turn.next();  //if the other agent can place a move that this one couldn't, it gets a 5pt bonus
 			return false;
 		}
-		scores[turn.ordinal()]++;
+		scores[turn.ordinal()] += 1 + (5*failures);
 		board[x][y] = turn;
 		
-		if( hasWinner() ) {
+		if( isGameDone() ) {
 			scores[ turn.ordinal() ] += 1000; //gg
 			turn = null;
 		}else {
@@ -68,8 +74,12 @@ public class TicTacToe {
 		return false;
 	}
 	
-	public boolean hasWinner() {
-		if( winner != null )
+	public Player getWinner() {
+		return winner;
+	}
+	
+	public boolean isGameDone() {
+		if( winner != null || failures >= 2 )
 			return true;
 		
 		for( int i = 0; i < 3; i++) {

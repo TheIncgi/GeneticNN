@@ -10,14 +10,17 @@ public class Neuron {
 	protected Network network;
 	protected NeuronGenes genes;
 	
-	float output = 0;
-	float gate = 1;
+	protected float output = 0;
+	protected float gate = 1;
 	
 	public Neuron(Network network, NeuronGenes genes) {
 		this.network = network;
 		this.genes = genes;
 	}
 	
+	/**Input neurons can use this, be sure to override update*/
+	protected Neuron() {
+	}
 	
 	
 	protected float calculateOutput( GeneHashBundle connections, ActivationFunction activation ) {

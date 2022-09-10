@@ -1,6 +1,6 @@
 package com.theincgi.genetic.nn;
 
-import static com.theincgi.commons.RandomUtils.pickRandom;
+import static com.theincgi.commons.RandomUtils.pickRandomOfVarargs;
 import static com.theincgi.genetic.nn.GateEnable.ENABLED;
 
 import java.util.ArrayList;
