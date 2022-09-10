@@ -1,5 +1,6 @@
 package com.theincgi.genetic.nn;
 
+import static com.theincgi.commons.RandomUtils.pickRandom;
 import static com.theincgi.commons.RandomUtils.pickRandomOfVarargs;
 import static com.theincgi.genetic.nn.GateEnable.ENABLED;
 
@@ -41,8 +42,7 @@ public class NeuronGenes extends GeneBundle {
 		super(random);
 		this.options = bundle;
 		
-		id = bundle.nextID.getAndIncrement();
-		bundle.getIDs().add(id);
+		id = bundle.nextID.get();
 		
 		this.connectionFactory = ()->{
 			Connection c = new Connection(random, getConnectionOptions());

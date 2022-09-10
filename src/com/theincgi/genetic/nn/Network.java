@@ -14,7 +14,7 @@ abstract public class Network {
 
 	protected NeuronBundle neuronGenes;
 	
-	protected HashMap<Integer, Neuron> neurons;
+	protected HashMap<Integer, Neuron> neurons = new HashMap<>();
 	
 	public Network(Random random, int inputs, int outputs) {
 		this.neuronGenes = new NeuronBundle(random, inputs, outputs);

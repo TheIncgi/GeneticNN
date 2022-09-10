@@ -2,6 +2,7 @@ package com.theincgi.genetic.nn.test.game;
 
 import java.util.EnumMap;
 import java.util.Random;
+import java.util.StringJoiner;
 
 import com.theincgi.commons.RandomUtils;
 
@@ -106,6 +107,7 @@ public class TicTacToe {
 	}
 	
 	protected boolean checkLine( int x, int y, int dx, int dy ) {
+		if( board[x][y] == null ) return false;
 		return board[x][y].equals( board[x+dx][y+dy]) &&
 			   board[x][y].equals( board[x+dx*2][y+dy*2] );
 	}
@@ -118,4 +120,21 @@ public class TicTacToe {
 		return scores[p.ordinal()];
 	}
 	
+	@Override
+	public String toString() {
+		StringJoiner j = new StringJoiner("\n-+-+-\n");
+		for( int y = 0; y<3; y++) {
+			StringJoiner line = new StringJoiner("|");
+			for(int x = 0; x<3; x++) {
+				if(board[x][y] == null)
+					line.add(" ");
+				else if( board[x][y].equals(Player.P1))
+					line.add("X");
+				else 
+					line.add("O");
+			}
+			j.add(line.toString());
+		}
+		return j.toString();
+	}
 }

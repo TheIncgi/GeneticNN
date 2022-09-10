@@ -31,7 +31,7 @@ public class NeuronBundle extends GeneHashBundle {
 
 
 	public NeuronBundle(Random random, int inputs, int outputs ) {
-		super(random, geneFactory);
+		super(random, null);
 		activationFunctions = loadActivationFunctions();
 		this.inputs = inputs;
 		this.outputs = outputs;
@@ -52,7 +52,11 @@ public class NeuronBundle extends GeneHashBundle {
 	
 	protected Supplier<NamedGene> mkGeneFactory() {
 		return ()->{
-			return new NamedGene( Integer.toString( nextID.getAndIncrement()), new NeuronGenes(random, this) );
+			try {
+				return new NamedGene( Integer.toString( nextID.get()), new NeuronGenes(random, this) );
+			}finally {
+				nextID.getAndIncrement();
+			}
 		};
 	}
 	
@@ -116,7 +120,7 @@ public class NeuronBundle extends GeneHashBundle {
 		
 		public boolean isInput() {return this.equals(INPUT);}
 		public boolean isHidden() {return this.equals(HIDDEN);}
-		public boolean isOutput() {return this.equals(OUTPUT;}
+		public boolean isOutput() {return this.equals(OUTPUT);}
 	} 
 	
 }
