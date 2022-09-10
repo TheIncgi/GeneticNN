@@ -33,6 +33,11 @@ public class Connection extends GeneHashBundle {
 		weight.mutate();
 	}
 	
+	public Connection( Connection copyFrom ) {
+		super( copyFrom.random, null );
+		this.connectionSourceID = copyFrom.connectionSourceID.copy();
+		this.weight 			= copyFrom.weight.copy();
+	}
 	
 	@Override
 	public void addGene() {	
@@ -48,10 +53,7 @@ public class Connection extends GeneHashBundle {
 	
 	@Override
 	public Connection copy() {
-		Connection c = new Connection(random, /* TODO use copy constructor */);
-		c.connectionSourceID = connectionSourceID.copy();
-		c.weight = weight.copy();
-		return c;
+		return new Connection( this );
 	}
 	
 	@Override
@@ -60,5 +62,13 @@ public class Connection extends GeneHashBundle {
 			connectionSourceID.mutate();
 		if(weight.shouldMutateNow())
 			weight.mutate();
+	}
+
+	public int getInputID() {
+		return connectionSourceID.getValue();
+	}
+	
+	public float getWeight() {
+		return weight.getValue();
 	}
 }
