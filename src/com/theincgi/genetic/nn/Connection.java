@@ -71,4 +71,9 @@ public class Connection extends GeneHashBundle {
 	public float getWeight() {
 		return weight.getValue();
 	}
+	
+	@Override
+	public String toString() {
+		return "[src: %d | wt: %.2f]".formatted(connectionSourceID.getValue(), weight.getValue());
+	}
 }

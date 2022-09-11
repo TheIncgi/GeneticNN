@@ -68,10 +68,12 @@ public class PlayerEntity extends Entity {
 	
 	@Override
 	public Float getScore() {
-		return score / gamesPlayed ;
+		return score / gamesPlayed 
+				+ Math.min( ((NeuronBundle)getGenes()).sizeConnections(), 40 ) * 100 
 //				- age 
 //				- score < 30 ? 0 : ((NeuronBundle)getGenes()).sizeHidden() / 30f 
 //				- score < 30 ? 0 : ((NeuronBundle)getGenes()).sizeConnections() / 60f;
+				;
 	}
 	
 	public record PlayerStats( float maxMutation, float avgMutation, int inputs, int outputs, int hidden, int connections, float strongestWeight,  float score ) {}

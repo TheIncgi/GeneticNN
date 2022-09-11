@@ -41,11 +41,11 @@ public class Neuron {
 	}
 	
 	public void update() {
-		if( genes.isGateEnabled() ) {
-			gate = calculateOutput( genes.getGateConnections(), genes.getGateActivationFunction(), genes.getGateBias() );
-			if( gate < .5 )
-				return;
-		}
+//		if( genes.isGateEnabled() ) {
+//			gate = calculateOutput( genes.getGateConnections(), genes.getGateActivationFunction(), genes.getGateBias() );
+//			if( gate < .5 )
+//				return;
+//		}
 		
 		output = calculateOutput( genes.getConnections(), genes.getActivationFunction(), genes.getBias() );
 	}

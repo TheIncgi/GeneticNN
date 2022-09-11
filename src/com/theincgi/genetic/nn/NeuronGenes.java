@@ -135,7 +135,7 @@ public class NeuronGenes extends GeneBundle {
 	}
 	
 	public boolean isGateEnabled() {
-		return gateEnabled.getValue().isEnabled();
+		return return false;//gateEnabled.getValue().isEnabled();
 	}
 	
 	public float getBias() {
