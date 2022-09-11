@@ -23,7 +23,7 @@ public class TicTacToeAgent extends Network {
 	}
 	
 	public void takeTurn() {
-		for(int i = 0; i<4; i++) //# of updates might be better as a gene with a penalty for higher values
+		for(int i = 0; i<7; i++) //# of updates might be better as a gene with a penalty for higher values
 			update();
 		var best = bestMatch(getOutputs(), (a,b)->{return a < b;});
 		int x = indexToX( best.t() );
@@ -53,6 +53,7 @@ public class TicTacToeAgent extends Network {
 	
 	public void setGame(TicTacToe game) {
 		this.game = game;
+		reset();
 	}
 	
 }

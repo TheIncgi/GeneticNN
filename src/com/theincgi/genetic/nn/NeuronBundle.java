@@ -47,6 +47,10 @@ public class NeuronBundle extends GeneHashBundle {
 		this.outputs = copyFrom.outputs;
 		this.nextID.set( copyFrom.nextID.get() );
 		this.idList.addAll( copyFrom.idList );
+		
+		for( var g : copyFrom.getGenes().entrySet() )
+			this.getGenes().put(g.getKey(), g.getValue().copy());
+		
 		addOutputGenes(); //probably won't need to do anything, unless new inputs were adding later
 	}
 	
@@ -87,6 +91,26 @@ public class NeuronBundle extends GeneHashBundle {
 		return  Optional.empty();
 	}
 	
+	public int sizeHidden() {
+		return size() - outputs;
+	} 
+	
+	public int sizeConnections() {
+		int totalConnections = 0;
+		for( var g : getGenes().values() ) {
+			totalConnections += ((NeuronGenes)g).sizeConnections();
+		}
+		return totalConnections;
+	}
+	
+	public float strongestWeight() {
+		float strongest = 0;
+		for( var g : getGenes().values() ) {
+			strongest = Math.max( strongest , ((NeuronGenes)g).strongestWeight() );
+		}
+		return strongest;
+	}
+	
 	@Override
 	public void addGene() {
 		int key = nextID.get();
@@ -121,6 +145,10 @@ public class NeuronBundle extends GeneHashBundle {
 		public boolean isInput() {return this.equals(INPUT);}
 		public boolean isHidden() {return this.equals(HIDDEN);}
 		public boolean isOutput() {return this.equals(OUTPUT);}
-	} 
+	}
+
+	
+
+	
 	
 }

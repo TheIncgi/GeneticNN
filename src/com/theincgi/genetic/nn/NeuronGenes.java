@@ -15,7 +15,6 @@ import com.theincgi.commons.Pair;
 import com.theincgi.commons.RandomUtils;
 import com.theincgi.genetic.FloatGene;
 import com.theincgi.genetic.Gene;
-import com.theincgi.genetic.GeneArrayBundle;
 import com.theincgi.genetic.GeneBundle;
 import com.theincgi.genetic.GeneHashBundle;
 import com.theincgi.genetic.OptionGene;
@@ -82,6 +81,8 @@ public class NeuronGenes extends GeneBundle {
 	public List<Integer> getConnectionOptions() {
 		if( getParent().isPresent() && getParent().get() instanceof NeuronBundle )
 			return ((NeuronBundle)getParent().get()).getIDs();
+		if( getParent().isEmpty() )
+			throw new NullPointerException("Missing parent, be sure to call Entity#updateGeneParenting() after constructor");
 		throw new IllegalStateException("Neuron must be a child gene to a NueronBundle to generate connections");
 	}
 	
@@ -108,7 +109,10 @@ public class NeuronGenes extends GeneBundle {
 	
 	@Override
 	public void removeGene() {
-		//TODO
+		var area = RandomUtils.pickRandomOfVarargs(random, connections, gateConnections);
+		var key = RandomUtils.pickRandom(random, area.getGenes().keySet());
+		if( key!=null )
+			area.getGenes().remove(key);
 	}
 	
 	@Override
@@ -169,8 +173,11 @@ public class NeuronGenes extends GeneBundle {
 		
 		ArrayList<NeuronGenes> parentNeurons = CollectionUtils.addAllWhereExtends(new ArrayList<>(), parentBundles, NeuronGenes.class);
 		
-		ArrayList<GeneHashBundle> parentConnections     = (ArrayList<GeneHashBundle>) parentNeurons.stream().map(x->x.connections    ).toList();
-		ArrayList<GeneHashBundle> parentGateConnections = (ArrayList<GeneHashBundle>) parentNeurons.stream().map(x->x.gateConnections).toList();
+		if( parentNeurons.size() != parentBundles.size() )
+			throw new IllegalStateException("Parent bundles were not of type NeuronGenes");
+		
+		ArrayList<GeneHashBundle> parentConnections     = CollectionUtils.collect(parentNeurons.stream().map(x->x.connections), ArrayList::new );
+		ArrayList<GeneHashBundle> parentGateConnections = CollectionUtils.collect(parentNeurons.stream().map(x->x.gateConnections), ArrayList::new);
 		
 		connections.mix(parentConnections);
 		
@@ -198,5 +205,20 @@ public class NeuronGenes extends GeneBundle {
 	@Override
 	public NeuronGenes copy() {
 		return new NeuronGenes(this);
+	}
+
+
+	public int sizeConnections() {
+		return connections.size();
+	}
+	
+	/**abs of strongest non gate weight*/
+	public float strongestWeight() {
+		float max = 0;
+		for( var c : connections.getGenes().values() ) {
+			Connection conn = (Connection) c;
+			max = Math.max(max, Math.abs( conn.weight.getValue() ));
+		}
+		return max;
 	}
 }

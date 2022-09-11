@@ -23,8 +23,8 @@ public class Neuron {
 	}
 	
 	
-	protected float calculateOutput( GeneHashBundle connections, ActivationFunction activation ) {
-		float sum = 0;
+	protected float calculateOutput( GeneHashBundle connections, ActivationFunction activation, float bias ) {
+		float sum = bias;
 		for( var c : connections.getGenesIterable() ) {
 			Connection conn = (Connection) c;
 			int fromID = conn.getInputID();
@@ -42,12 +42,12 @@ public class Neuron {
 	
 	public void update() {
 		if( genes.isGateEnabled() ) {
-			gate = calculateOutput( genes.getGateConnections(), genes.getGateActivationFunction());
+			gate = calculateOutput( genes.getGateConnections(), genes.getGateActivationFunction(), genes.getGateBias() );
 			if( gate < .5 )
 				return;
 		}
 		
-		output = calculateOutput( genes.getConnections(), genes.getActivationFunction() );
+		output = calculateOutput( genes.getConnections(), genes.getActivationFunction(), genes.getBias() );
 	}
 	
 	public void reset() {

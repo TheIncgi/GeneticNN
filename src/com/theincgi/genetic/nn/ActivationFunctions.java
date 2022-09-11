@@ -9,14 +9,14 @@ import com.theincgi.genetic.OptionGene;
 
 public class ActivationFunctions {
 
-	public static final ActivationFunction 
-	    sigmoid       = x -> { return (float) (1f / ( 1f + exp( -x ) )); },
-	    relu          = x -> { return x <= 0 ? 0 : x; },
-	    leakyRelu     = x -> { return x <= 0 ? x * .2f : x; },
-	    gelu	      = x -> { return (float) ( x / ( 1 + exp( -x )));  },
+	public static final NamedActivationFunction 
+	    sigmoid       = new NamedActivationFunction("sigmoid",       x -> { return (float) (1f / ( 1f + exp( -x ) )); }),
+	    relu          = new NamedActivationFunction("relu",          x -> { return x <= 0 ? 0 : x; }),
+	    leakyRelu     = new NamedActivationFunction("leaky relu",    x -> { return x <= 0 ? x * .2f : x; }),
+	    gelu	      = new NamedActivationFunction("gelu",          x -> { return (float) ( x / ( 1 + exp( -x )));  }),
 	    //identity  = x -> { return x; }, //lol
-	    tanh      	  = x -> { return (float) Math.tanh(x); },
-	    doubleSigmoid = x -> { return (float) ( 2 / (1 + exp( Math.pow(-x, 3) )) -1 ); };
+	    tanh      	  = new NamedActivationFunction("tanh",          x -> { return (float) Math.tanh(x); }),
+	    doubleSigmoid = new NamedActivationFunction("double sigmoid",x -> { return (float) ( 2 / (1 + exp( Math.pow(-x, 3) )) -1 ); });
 	    
 	    
 	
@@ -28,6 +28,27 @@ public class ActivationFunctions {
 		list.add(tanh);
 		list.add(doubleSigmoid);
 		return list;
+	}
+	
+	public static class NamedActivationFunction implements ActivationFunction { 
+		private String name;
+		private ActivationFunction func;
+
+		public NamedActivationFunction( String name, ActivationFunction func ) {
+			this.name = name;
+			this.func = func;
+		} 
+		
+		@Override
+		public float apply(float x) {
+			return func.apply(x);
+		}
+		
+		@Override
+		public String toString() {
+			return "ActivationFunction<%s>".formatted(name);
+		}
+		
 	}
 	
 	@FunctionalInterface

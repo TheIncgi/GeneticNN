@@ -54,11 +54,11 @@ public class TicTacToe {
 			turn = turn.next();  //if the other agent can place a move that this one couldn't, it gets a 5pt bonus
 			return false;
 		}
-		scores[turn.ordinal()] += 1 + (5*failures);
+		scores[turn.ordinal()] += 300 + (5*failures);
 		board[x][y] = turn;
 		
 		if( isGameDone() ) {
-			scores[ turn.ordinal() ] += 1000; //gg
+			scores[ getWinner().ordinal() ] += 10000; //gg
 			turn = null;
 		}else {
 			turn = turn.next();

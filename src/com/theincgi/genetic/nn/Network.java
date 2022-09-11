@@ -12,26 +12,28 @@ import com.theincgi.genetic.GeneHashBundle;
 
 abstract public class Network {
 
-	protected NeuronBundle neuronGenes;
+	protected NeuronBundle neuronBundle;
 	
 	protected HashMap<Integer, Neuron> neurons = new HashMap<>();
 	
 	public Network(Random random, int inputs, int outputs) {
-		this.neuronGenes = new NeuronBundle(random, inputs, outputs);
+		this.neuronBundle = new NeuronBundle(random, inputs, outputs);
+		loadAllNeurons();
 	}
 	
 	public Network(NeuronBundle neurons) {
-		this.neuronGenes = neurons;
+		this.neuronBundle = neurons;
+		loadAllNeurons();
 	}
 	
 	public Optional<Neuron> getInputNeuron( int inputNum ) {
-		if( neuronGenes.getNeuronType(inputNum).isInput() )
+		if( neuronBundle.getNeuronType(inputNum).isInput() )
 			return getNeuron( inputNum );
 		return Optional.empty();
 	}
 	public Optional<Neuron> getOutputNeuron( int outputNum ) {
-		int id = neuronGenes.inputs + outputNum;
-		if( neuronGenes.getNeuronType( id ).isOutput() )
+		int id = neuronBundle.inputs + outputNum;
+		if( neuronBundle.getNeuronType( id ).isOutput() )
 			return getNeuron( id );
 		return Optional.empty();
 	}
@@ -40,12 +42,12 @@ abstract public class Network {
 	
 	public Optional<Neuron> getNeuron( int id ) {
 		if(!neurons.containsKey( id ) ) {
-			var type = neuronGenes.getNeuronType( id );
+			var type = neuronBundle.getNeuronType( id );
 			if( type == null ) return Optional.empty();
 			switch( type ) {
 				case HIDDEN: 
 				case OUTPUT: {
-					var genes = neuronGenes.getNeuron( id );
+					var genes = neuronBundle.getNeuron( id );
 					if( genes.isPresent() ) {
 						var neuron = new Neuron(this, genes.get());
 						neurons.put(id, neuron);
@@ -61,7 +63,7 @@ abstract public class Network {
 	}
 	
 	public void loadAllNeurons() {
-		for( int id : neuronGenes.getIDs() )
+		for( int id : neuronBundle.getIDs() )
 			getNeuron(id);
 	}
 	
@@ -69,13 +71,18 @@ abstract public class Network {
 		for( var n : neurons.values() ) //TODO hash order may be source of uncontrolled random
 			n.update();
 	}
+	
+	public void reset() {
+		for( var n : neurons.values() ) //TODO hash order may be source of uncontrolled random
+			n.reset();
+	}
 
 	public int inputSize() {
-		return neuronGenes.inputs;
+		return neuronBundle.inputs;
 	}
 	
 	public int outputSize() {
-		return neuronGenes.outputs;
+		return neuronBundle.outputs;
 	}
 	
 	public List<Float> getOutputs() {
@@ -86,8 +93,8 @@ abstract public class Network {
 		return outputs;
 	}
 	
-	public NeuronBundle getNeuronGenes() {
-		return neuronGenes;
+	public NeuronBundle getNeuronBundle() {
+		return neuronBundle;
 	}
 	
 }
