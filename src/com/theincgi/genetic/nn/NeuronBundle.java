@@ -11,12 +11,13 @@ import com.theincgi.genetic.FloatGene;
 import com.theincgi.genetic.GeneBundle;
 import com.theincgi.genetic.GeneHashBundle;
 import com.theincgi.genetic.nn.ActivationFunctions.ActivationFunction;
+import com.theincgi.genetic.nn.ActivationFunctions.NamedActivationFunction;
 
 public class NeuronBundle extends GeneHashBundle {
 	
 	public AtomicInteger nextID = new AtomicInteger(0);
 	private final ArrayList<Integer> idList = new ArrayList<>();
-	public ArrayList<ActivationFunction> activationFunctions;
+	public ArrayList<NamedActivationFunction> activationFunctions;
 	public final int inputs, outputs;
 	
 	public NeuronBundle(Random random, int inputs, int outputs, FloatGene addRemoveFactor) {
@@ -24,8 +25,8 @@ public class NeuronBundle extends GeneHashBundle {
 		activationFunctions = loadActivationFunctions();
 		this.inputs = inputs;
 		this.outputs = outputs;
-		nextID.set(inputs);
 		setGeneFactory(mkGeneFactory());
+		addInputPlaceholders();
 		addOutputGenes();
 	}
 
@@ -35,8 +36,8 @@ public class NeuronBundle extends GeneHashBundle {
 		activationFunctions = loadActivationFunctions();
 		this.inputs = inputs;
 		this.outputs = outputs;
-		nextID.set(inputs);
 		setGeneFactory(mkGeneFactory());
+		addInputPlaceholders();
 		addOutputGenes();
 	}
 	
@@ -64,6 +65,15 @@ public class NeuronBundle extends GeneHashBundle {
 		};
 	}
 	
+	/**Assumes empty list*/
+	protected void addInputPlaceholders() {
+		for(int i = 0; i < inputs; i++) {
+			idList.add( i );
+		}
+		if( nextID.get() < inputs )
+			nextID.set(inputs);
+	}
+	
 	protected void addOutputGenes() {
 		while( nextID.get() < inputs + outputs ) {
 			addGene();
@@ -72,7 +82,16 @@ public class NeuronBundle extends GeneHashBundle {
 	
 	public List<Integer> getIDs() {
 		//must always be same list instance, used as options for connection OptionGene
+		if( idList.size() != (inputs + getGenes().size()) )
+			recalcIDList();
 		return idList;
+	}
+	
+	protected void recalcIDList() {
+		idList.clear();
+		addInputPlaceholders();
+		for( var k : getGenes().keySet() )
+			idList.add( Integer.parseInt(k) );
 	}
 	
 	/**null or type of neuron*/
@@ -131,9 +150,17 @@ public class NeuronBundle extends GeneHashBundle {
 	public NeuronBundle copy() {
 		return new NeuronBundle( this );
 	}
+	
+	@Override
+	public void mutate() {
+		super.mutate();
+	}
+
+
+	
 
 	@SuppressWarnings("static-method") //this method is meant to be overloaded
-	public ArrayList<ActivationFunction> loadActivationFunctions() {
+	public ArrayList<NamedActivationFunction> loadActivationFunctions() {
 		return ActivationFunctions.loadActivationFunctions(new ArrayList<>());
 	}
 	

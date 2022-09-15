@@ -19,6 +19,7 @@ import com.theincgi.genetic.GeneBundle;
 import com.theincgi.genetic.GeneHashBundle;
 import com.theincgi.genetic.OptionGene;
 import com.theincgi.genetic.nn.ActivationFunctions.ActivationFunction;
+import com.theincgi.genetic.nn.ActivationFunctions.NamedActivationFunction;
 
 public class NeuronGenes extends GeneBundle {
 	
@@ -31,8 +32,8 @@ public class NeuronGenes extends GeneBundle {
 	FloatGene gateAddFactor;
 	
 	OptionGene<GateEnable> gateEnabled;
-	OptionGene<ActivationFunctions.ActivationFunction> activationFunction;
-	OptionGene<ActivationFunctions.ActivationFunction> gateActivationFunction;
+	OptionGene<ActivationFunctions.NamedActivationFunction> activationFunction;
+	OptionGene<ActivationFunctions.NamedActivationFunction> gateActivationFunction;
 	
 	private Supplier<Connection> connectionFactory;
 	private NeuronBundle options;
@@ -135,7 +136,7 @@ public class NeuronGenes extends GeneBundle {
 	}
 	
 	public boolean isGateEnabled() {
-		return return false;//gateEnabled.getValue().isEnabled();
+		return false;//gateEnabled.getValue().isEnabled();
 	}
 	
 	public float getBias() {
@@ -146,11 +147,11 @@ public class NeuronGenes extends GeneBundle {
 		return gateBias.getValue();
 	}
 	
-	public ActivationFunction getActivationFunction() {
+	public NamedActivationFunction getActivationFunction() {
 		return activationFunction.getValue();
 	}
 	
-	public ActivationFunction getGateActivationFunction() {
+	public NamedActivationFunction getGateActivationFunction() {
 		return gateActivationFunction.getValue();
 	}
 	

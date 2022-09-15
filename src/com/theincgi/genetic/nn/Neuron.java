@@ -1,9 +1,12 @@
 package com.theincgi.genetic.nn;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringJoiner;
 
 import com.theincgi.genetic.GeneHashBundle;
 import com.theincgi.genetic.nn.ActivationFunctions.ActivationFunction;
+import com.theincgi.genetic.nn.ActivationFunctions.NamedActivationFunction;
 
 public class Neuron {
 	
@@ -61,5 +64,47 @@ public class Neuron {
 	
 	public float getGateOutput() {
 		return gate;
+	}
+	
+	public NamedActivationFunction getActivationFunction() {
+		return genes.getActivationFunction();
+	}
+	
+	public NamedActivationFunction getGateActivationFunction() {
+		return genes.getGateActivationFunction();
+	}
+	
+	public float getBias() {
+		return genes.getBias();
+	}
+	
+	public float getGateBias() {
+		return genes.getGateBias();
+	}
+	
+	public NeuronGenes getGenes() {
+		return genes;
+	}
+	
+	public boolean isGateEnabled() {
+		return genes.isGateEnabled();
+	}
+	
+	public Iterable<Connection> getConnections() {
+		ArrayList<Connection> c = new ArrayList<>();
+		genes.getConnections().getGenesIterable().forEach(g->{c.add((Connection) g);});
+		return c;
+	}
+	
+	@Override
+	public String toString() {
+		StringJoiner j = new StringJoiner(" + ", getActivationFunction() + "(", ")" );
+		j.add("bias: "+getBias());
+		
+		for( var c : getConnections() ) {
+			j.add( "[i%d] * %.3f".formatted(  c.connectionSourceID.getValue(), c.weight.getValue() ) );
+		}
+		
+		return "Neuron[%d]_%s".formatted( getGenes().id, j.toString());
 	}
 }

@@ -59,7 +59,7 @@ abstract public class Network {
 			}
 			
 		}
-		return Optional.of(neurons.get(id));
+		return Optional.ofNullable(neurons.get(id));
 	}
 	
 	public void loadAllNeurons() {
@@ -67,9 +67,13 @@ abstract public class Network {
 			getNeuron(id);
 	}
 	
-	public void update() {
-		for( var n : neurons.values() ) //TODO hash order may be source of uncontrolled random
+	public void update() { ///TODO CONCURRENT MOD??
+		for( int i = 0; i < inputSize(); i++ )
+			neurons.get( Integer.toString(i) ).update();
+		
+		for( var n : neurons.values() ) {
 			n.update();
+		}
 	}
 	
 	public void reset() {

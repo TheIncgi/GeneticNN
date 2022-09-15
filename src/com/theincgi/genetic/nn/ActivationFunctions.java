@@ -20,7 +20,7 @@ public class ActivationFunctions {
 	    
 	    
 	
-	public static <T extends List<ActivationFunction>> T loadActivationFunctions(T list) {
+	public static <T extends List<NamedActivationFunction>> T loadActivationFunctions(T list) {
 		list.add(sigmoid);
 		list.add(relu);
 		list.add(leakyRelu);
