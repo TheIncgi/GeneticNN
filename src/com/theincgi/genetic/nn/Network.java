@@ -68,11 +68,19 @@ abstract public class Network {
 	}
 	
 	public void update() { ///TODO CONCURRENT MOD??
-		for( int i = 0; i < inputSize(); i++ )
-			neurons.get( Integer.toString(i) ).update();
+		for( int i = 0; i < inputSize(); i++ ) {
+			var n = getNeuron( i );
+			n.get().update(); //input must exist
+		}
 		
-		for( var n : neurons.values() ) {
-			n.update();
+		for( int i = inputSize() + outputSize(); i < neuronBundle.sizeAllNeurons(); i++ ) {
+			var optN = getNeuron( i );
+			optN.ifPresent(n->n.update());
+		}
+		
+		for( int i = inputSize(); i < inputSize()+outputSize(); i++ ) {
+			var n = getNeuron( i );
+			n.get().update(); //output must exist
 		}
 	}
 	

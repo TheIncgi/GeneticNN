@@ -27,13 +27,15 @@ public class PlayerEntity extends Entity {
 		super();
 		agent = new TicTacToeAgent(this.random = random);
 		setGenes( agent.getNeuronBundle() );
+		for( int i = 0; i < 10+random.nextInt(60); i++)
+			agent.getNeuronBundle().addGene();
 		
 		updateGeneParenting();
 	}
 	
 	@Override
 	public void live( Population population ) {
-		for( int i = 0; i < 12; i++) {
+		for( int i = 0; i < 20; i++) {
 			var opponent = (PlayerEntity)population.getRandom();
 			playGame( opponent, true );
 		}
@@ -68,12 +70,15 @@ public class PlayerEntity extends Entity {
 	
 	@Override
 	public Float getScore() {
-		return score / gamesPlayed 
-				+ Math.min( ((NeuronBundle)getGenes()).sizeConnections(), 40 ) * 100 
-//				- age 
-//				- score < 30 ? 0 : ((NeuronBundle)getGenes()).sizeHidden() / 30f 
+		return score / gamesPlayed// - (age > 10 ? 100000f : 0f)
+//				//+ Math.min( ((NeuronBundle)getGenes()).sizeConnections(), 40 ) * 100 
+////				- age 
+//				+ Math.min(
+//					(( NeuronBundle)getGenes()).sizeHidden(),
+//				100 )
 //				- score < 30 ? 0 : ((NeuronBundle)getGenes()).sizeConnections() / 60f;
-				;
+				//;
+			;
 	}
 	
 	public record PlayerStats( float maxMutation, float avgMutation, int inputs, int outputs, int hidden, int connections, float strongestWeight,  float score ) {}

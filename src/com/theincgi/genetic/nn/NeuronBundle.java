@@ -114,6 +114,10 @@ public class NeuronBundle extends GeneHashBundle {
 		return size() - outputs;
 	} 
 	
+	public int sizeAllNeurons() {
+		return inputs + outputs + sizeHidden();
+	}
+	
 	public int sizeConnections() {
 		int totalConnections = 0;
 		for( var g : getGenes().values() ) {

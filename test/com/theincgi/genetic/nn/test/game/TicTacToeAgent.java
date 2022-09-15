@@ -54,6 +54,7 @@ public class TicTacToeAgent extends Network {
 	public void setGame(TicTacToe game) {
 		this.game = game;
 		reset();
+		loadAllNeurons();
 	}
 	
 }

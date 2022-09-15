@@ -16,7 +16,7 @@ public class LearnTicTacToeDemo {
 				1000
 		);
 		
-//		population.setNumParents(2);
+//		population.setNumParents(1);
 		
 		for( int i = 0; i < 30000; i++ ) {
 			System.out.println( "Gen: " + (population.getGenerations() + 1) );

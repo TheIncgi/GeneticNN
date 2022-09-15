@@ -15,8 +15,7 @@ public class Connection extends GeneHashBundle {
 	
 	public Connection(Random random) {
 		super(random, null);
-		weight = new FloatGene(random);
-		weight.mutate();
+		weight = new FloatGene(random, rand()*.1f, -3f, 3f);
 	}
 	
 	public Connection(Random random, List<Integer> connectionSourceIDs) {
