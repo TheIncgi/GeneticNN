@@ -10,11 +10,12 @@ public class NodeSpacer {
 	
 	public List<Node> nodes;
 	public List<Link> links;
-	float prefDist = 3;
+	float prefDist = 350;
 	
 	/**
 	 * if directional is set then link sources will try to be placed more in -direction and<br>
-	 * link destinations more in the +direction
+	 * link destinations more in the +direction<br>
+	 * @param directional (2d vector)
 	 * */
 	public NodeSpacer(List<Node>nodes, List<Link> links, Optional<Pair<Float, Float>> directional) {
 		this.nodes = nodes;
@@ -24,6 +25,7 @@ public class NodeSpacer {
 	public void itterate() {
 		for( Link link : links ) {
 			float dist = link.a.distTo(link.b);
+			dist = Math.max(dist, 1f);
 			float force = springForce( dist );
 			float dx = link.b.x - link.a.x;
 			float dy = link.b.y - link.a.y;
@@ -42,17 +44,31 @@ public class NodeSpacer {
 	//result, negative = pull, positive = push
 	public float springForce( float dist ) {
 		float d = prefDist - dist;
-		return Math.abs(d*d*d)/d;
+		return d;//Math.abs(d*d*d)/d;
 	}
 	
-	public static record Link (Node a, Node b, float weight) {};
+	public static class Link {
+		Node a,b;
+		float weight;
+		public Link(Node a, Node b) {this(a,b,1);}
+		public Link(Node a, Node b, float weight) {
+			this.a=a; this.b=b;this.weight=weight;
+		}
+		public Node getA() { return a; }
+		public Node getB() { return b; }
+		public float getWeight() { return weight; }
+	};
 	
 	
 	public static class Node {
 		public float x, y;
 		protected float fx, fy;
+		private boolean moveable = true;
+		
+		public Node setMoveable(boolean canMove) { moveable = canMove; return this; }
+		public Node anchor() { return setMoveable( false ); }
 		boolean moveable() {
-			return true;
+			return moveable;
 		}
 		public void move() {
 			if(!moveable()) return;

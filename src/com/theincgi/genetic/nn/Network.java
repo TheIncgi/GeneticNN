@@ -3,8 +3,10 @@ package com.theincgi.genetic.nn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import com.theincgi.genetic.Entity;
 import com.theincgi.genetic.GeneBundle;
@@ -36,6 +38,16 @@ abstract public class Network {
 		if( neuronBundle.getNeuronType( id ).isOutput() )
 			return getNeuron( id );
 		return Optional.empty();
+	}
+	public Optional<Neuron> getHiddenNeuron( int hiddenNum ) {
+		int id = neuronBundle.inputs + neuronBundle.outputs + hiddenNum;
+		if( neuronBundle.getNeuronType( id ).isHidden() )
+			return getNeuron( id );
+		return Optional.empty();
+	}
+	
+	public Set<Entry<Integer, Neuron>> getNeuronSet() {
+		return neurons.entrySet();
 	}
 	
 	protected abstract Neuron createInputNeuron( int inputNum );
@@ -95,6 +107,10 @@ abstract public class Network {
 	
 	public int outputSize() {
 		return neuronBundle.outputs;
+	}
+	
+	public int hiddenSize() {
+		return neuronBundle.sizeHidden();
 	}
 	
 	public List<Float> getOutputs() {

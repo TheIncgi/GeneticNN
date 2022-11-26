@@ -1,6 +1,7 @@
 package com.theincgi.genetic.nn.test.reallyBasic;
 
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import com.theincgi.genetic.Entity;
 import com.theincgi.genetic.GeneBundle;
@@ -8,25 +9,29 @@ import com.theincgi.genetic.Population;
 import com.theincgi.genetic.nn.Network;
 import com.theincgi.genetic.nn.Neuron;
 import com.theincgi.genetic.nn.NeuronBundle;
+import com.theincgi.genetic.nn.visualize.NetworkVisualizer;
 
-public class CopyInputDemo {
+import javafx.application.Platform;
+
+public class CopyInputDemoFX {
 	
+	protected static  NetworkVisualizer netVis; 
 	
-	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		netVis = NetworkVisualizer.getInstance();
+		
 		Random random = new Random(1235);
+		System.out.println("Generating population");
 		Population pop = new Population(random, r->{ return new CopyEntity(r); }, gb->{ return new CopyEntity(gb); }, 50, 200);
 		
+		System.out.println("Gen 0 best:");
 		showBest(pop);
 		
-		for( int i = 0; i < 15000; i++ ) {
-			
+		netVis.epoch.setOnAction(e->{
 			pop.epoch();
 			System.out.printf( "Gen %4d Best Score: %10.6f\n", pop.getGenerations(), pop.getBest().getScore() );
-			
-		}
-		
-		showBest(pop);
+			showBest(pop);
+		});
 		
 	}
 
@@ -45,6 +50,9 @@ public class CopyInputDemo {
 //			net.update();
 			
 			float out = net.getOutputNeuron(0).get().getOutput();
+			
+			if(i==0)
+				netVis.setNetwork( net );
 			
 			System.out.printf("%2d: out: %5.2f | target: %5.2f\n", i, out, target);
 //			score += 1 - Math.abs( out - target );

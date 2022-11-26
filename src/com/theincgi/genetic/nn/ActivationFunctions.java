@@ -49,6 +49,9 @@ public class ActivationFunctions {
 			return "ActivationFunction<%s>".formatted(name);
 		}
 		
+		public String getName() {
+			return name;
+		}
 	}
 	
 	@FunctionalInterface

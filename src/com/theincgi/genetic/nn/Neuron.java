@@ -92,7 +92,8 @@ public class Neuron {
 	
 	public Iterable<Connection> getConnections() {
 		ArrayList<Connection> c = new ArrayList<>();
-		genes.getConnections().getGenesIterable().forEach(g->{c.add((Connection) g);});
+		if( genes == null ) return new ArrayList<Connection>();
+		genes.getConnections().getGenesIterable().forEach(g->{ if(g!=null) c.add((Connection) g);});
 		return c;
 	}
 	

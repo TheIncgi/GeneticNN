@@ -147,12 +147,37 @@ public class NeuronGenes extends GeneBundle {
 		return gateBias.getValue();
 	}
 	
+	public FloatGene getBiasGene() {
+		return bias;
+	}
+	
+	public FloatGene getGateBiasGene() {
+		return gateBias;
+	}
+	
+	public OptionGene<GateEnable> getGateEnabledGene() {
+		return gateEnabled;
+	}
+	
+	public OptionGene<NamedActivationFunction> getActivationFunctionGene() {
+		return activationFunction;
+	}
+	
+	public OptionGene<NamedActivationFunction> getGateActivationFunctionGene() {
+		return gateActivationFunction;
+	}
+	
 	public NamedActivationFunction getActivationFunction() {
 		return activationFunction.getValue();
 	}
 	
 	public NamedActivationFunction getGateActivationFunction() {
 		return gateActivationFunction.getValue();
+	}
+	
+	//chance that a connection gene is added to the gate connection pool instead of the regular connections
+	public FloatGene getGateAddFactorGene() {
+		return gateAddFactor;
 	}
 	
 	@Override
